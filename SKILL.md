@@ -1,6 +1,6 @@
 ---
 name: pdf-ingest
-description: Convert PDFs and office documents into machine-readable text or Markdown before analysis. Use whenever a task requires reading a PDF's contents. Routes between markitdown, Docling/Granite, marker, and MinerU by document type, with token- and memory-budget discipline for hosts running local LLMs.
+description: Convert PDFs and office documents into machine-readable text or Markdown. Use for batch conversion, corpus building, long documents (convert once, read selectively), when output files are required, or when the host model cannot ingest PDFs natively. If the host reads PDFs natively (vision-capable, e.g. Claude's Read tool), prefer native reading for short interactive questions. Routes between markitdown, Docling/Granite, marker, and MinerU by document type, with token- and memory-budget discipline.
 ---
 
 # PDF ingestion
@@ -9,6 +9,7 @@ Convert the document to Markdown with the right engine, then read the conversion
 
 ## Routing
 
+0. **Check native ingestion first.** If the host agent reads PDFs natively (vision-capable model with a page-range PDF tool), use that for short documents and interactive Q&A — highest fidelity, zero setup. Use this skill instead when: output *files* are required; the document is long enough that convert-once-read-selectively beats repeated native page reads; the job is batch/corpus conversion; or the host model is text-only.
 1. **Probe the text layer first.** Run `uvx --from 'markitdown[pdf]' markitdown <file>.pdf | head -c 2000`. If real prose comes back, the PDF is born-digital; if near-empty or garbage, it is a scan and needs an OCR-capable engine (step 4).
 2. **Born-digital + plain prose + simple question** → use the markitdown output directly. Details: `engines/markitdown.md`.
 3. **Default for quality conversion** (structure, tables, RAG-bound output, anything multi-page that will be re-read): Docling + Granite. Smallest memory footprint of the neural options (258M model), fast on Apple Silicon. Details: `engines/docling.md`.
