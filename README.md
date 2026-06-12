@@ -32,3 +32,5 @@ The converters themselves install separately (each engine file states its one-li
 ## Provenance
 
 This repo is published via `git subtree` from a private monorepo where the skill is actively edited and tested. Issues and PRs are welcome here and will be subtree-pulled back.
+
+MIT licensed.
