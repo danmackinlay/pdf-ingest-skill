@@ -12,9 +12,9 @@ Convert the document to Markdown with the right engine, then read the conversion
 0. **Check native ingestion first.** If the host agent reads PDFs natively (vision-capable model with a page-range PDF tool), use that for short documents and interactive Q&A — highest fidelity, zero setup. Use this skill instead when: output *files* are required; the document is long enough that convert-once-read-selectively beats repeated native page reads; the job is batch/corpus conversion; or the host model is text-only.
 1. **Probe the text layer first.** Run `uvx --from 'markitdown[pdf]' markitdown <file>.pdf | head -c 2000`. If real prose comes back, the PDF is born-digital; if near-empty or garbage, it is a scan and needs an OCR-capable engine (step 4).
 2. **Born-digital + plain prose + simple question** → use the markitdown output directly. Details: `engines/markitdown.md`.
-3. **Default for quality conversion** (structure, tables, RAG-bound output, anything multi-page that will be re-read): Docling + Granite. Smallest memory footprint of the neural options (258M model), fast on Apple Silicon. Details: `engines/docling.md`.
-4. **Mathematics that must render** (LaTeX in the output) or **scanned input**: marker. Details: `engines/marker.md`.
-5. **Escalation** when the above produce poor results on a hard document (complex layout, handwriting, exotic scripts): MinerU. Details: `engines/mineru.md`.
+3. **Default for quality conversion** (structure, tables, RAG-bound output, anything multi-page that will be re-read): Docling + Granite. Smallest memory footprint of the neural options (258M model), fast on Apple Silicon. NOT for equation transcription — see step 4. Details: `engines/docling.md`.
+4. **Mathematics that must render or be trusted** (LaTeX in the output, equation-heavy papers) or **scanned input**: marker or MinerU. Both measured corruption-free on equation-dense papers, while Docling silently substitutes tokens inside plausible LaTeX (measured: log(1/δ) → log(1/8)). marker is lighter and faster for one-offs; MinerU amortises a ~4 min model load over batches and preserves equation numbers. Details: `engines/marker.md`, `engines/mineru.md`.
+5. **Escalation** for the remaining hard cases (complex layout, handwriting, exotic scripts): MinerU with `--effort high`. Details: `engines/mineru.md`.
 
 Read the matching engine file before invoking; each contains exact commands and known failure modes.
 
