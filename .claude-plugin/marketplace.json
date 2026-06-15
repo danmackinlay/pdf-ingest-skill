@@ -1,0 +1,21 @@
+{
+  "name": "pdf-ingest",
+  "owner": {
+    "name": "danmackinlay",
+    "email": "dan@danmackinlay.name"
+  },
+  "metadata": {
+    "description": "Route PDFs and office documents to the right local converter",
+    "version": "0.0.1"
+  },
+  "plugins": [
+    {
+      "name": "pdf-ingest",
+      "description": "Convert PDFs and office documents into machine-readable text or Markdown, routing by document type between markitdown, Docling, marker, and MinerU.",
+      "source": "./",
+      "skills": [
+        "./"
+      ]
+    }
+  ]
+}
